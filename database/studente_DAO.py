@@ -46,6 +46,6 @@ WHERE s.matricola = %s ;"""
             res[row["codins"]] = (Corso(row["codins"], row["crediti"], row["nome"], row["pd"]))
             cnx.close()
 
-            return res
+        return res
 
 
