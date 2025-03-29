@@ -3,7 +3,7 @@ from model.studente import Studente
 from model.corso import Corso
 from database.DB_connect import get_connection
 
-class corso_DAO:
+class studenteDAO:
     def __init__(self):
         self.mappaStudenti = self.getAllStudenti()
 
@@ -38,7 +38,7 @@ JOIN iscrizione i ON s.matricola = i.matricola
 JOIN corso c ON i.codins = c.codins
 WHERE s.matricola = %s ;"""
 
-        cursor.execute(query, matricola)
+        cursor.execute(query, (matricola,))
 
         rows = cursor.fetchall()
         res = {}

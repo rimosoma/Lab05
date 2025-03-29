@@ -5,7 +5,7 @@ from model.studente import Studente
 
 import mysql.connector
 
-class corso_DAO:
+class corsoDAO:
     def __init__(self):
         self.mappaCorsi = self.getAllCorsi()
 
@@ -33,7 +33,7 @@ class corso_DAO:
 
 
     def getStudentiCorso(self, codins):
-
+        #print(codins)
         cnx = get_connection()
         cursor = cnx.cursor(dictionary=True)
         query = """SELECT s.matricola, s.cognome, s.nome, s.CDS
@@ -42,15 +42,15 @@ JOIN iscrizione i ON c.codins = i.codins
 JOIN studente s ON i.matricola = s.matricola
 WHERE c.codins = %s ;"""
 
-        cursor.execute(query, codins)
+        cursor.execute(query, (codins,))
 
         rows = cursor.fetchall()
         res = {}
         for row in rows:
             res[row["matricola"]] = (Studente(row["matricola"], row["cognome"], row["nome"], row["CDS"]))
-            cnx.close()
+        cnx.close()
 
-            return res
+        return res
 
 
 
