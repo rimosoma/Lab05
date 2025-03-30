@@ -40,6 +40,8 @@ class Controller:
             tupla = (codcorso, Corso.nome)
             listaTuple.append(tupla)
             self._view.console.controls.append(ft.Text(tupla))
+        self._view.btn_cercaCorsi.visible = False
+        self._view.btn_cercaCorsi.update()
         self._view._page.update()
 
         return listaTuple
@@ -60,8 +62,10 @@ class Controller:
             self._view._page.update()
             return listaTuple
         else:
-            print("non è stato assegnato il corso di interesse")
-            return []
+            alert = ft.AlertDialog(title=ft.Text("Inserire un corso"))
+            self._view._page.dialog = alert  # Assegna il dialog alla pagina
+            alert.open = True  # Imposta il flag di apertura
+            self._view._page.update()  # Aggiorna la UI per renderlo visibile            return []
 
 
     def handle_CercaStudente(self, e):
@@ -78,16 +82,37 @@ class Controller:
                     self._view._page.update()
                     return studenteCercato
                 else:
-                    print("lo studente non esiste")
-            except KeyError:
-                print("il studente non esiste")
+                    alert = ft.AlertDialog(title=ft.Text("Inserire una matricola"))
+                    self._view._page.dialog = alert  # Assegna il dialog alla pagina
+                    alert.open = True  # Imposta il flag di apertura
+                    self._view._page.update()  # Aggiorna la UI per renderlo visibile
+            except KeyError or ValueError:
+                self._view.console.clean()
+                print(self.matrStudInteresse)
+                self._view.console.controls.append(ft.Text("la matricola non esiste", color="red"))
+                self._view._page.update()
         else:
-            print("inserire matricola")
+            alert = ft.AlertDialog(title=ft.Text("Inserire una matricola"))
+            self._view._page.dialog = alert  # Assegna il dialog alla pagina
+            alert.open = True  # Imposta il flag di apertura
+            self._view._page.update()  # Aggiorna la UI per renderlo visibile
 
 
     def setCorso(self, e):
         self.codCorsoInteresse =  e.control.value
 
     def setMatricola(self,e ):
-        self.matrStudInteresse =  int(e.control.value)
+        if e.control.value.strip()== "":
+            self.matrStudInteresse = ""
+            self._view.nomeStud.value = ""
+            self._view.cognomeStud.value = ""
+            self._view._page.update()
+        try:
 
+            self.matrStudInteresse =  int(e.control.value)
+            self._view.console.clean()
+            self._view._page.update()
+        except ValueError:
+            self._view.console.clean()
+            self._view.console.controls.append(ft.Text("inserire matricola in numeri", color="purple"))
+            self._view._page.update()
